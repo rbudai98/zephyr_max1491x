@@ -1,0 +1,111 @@
+// &pinctrl {
+// 	custom_i2c: custom_i2c {
+//                 pinctrl-names = "Over_written";
+// 	};
+// };
+// &arduino_i2c {
+// 	pinctrl-names = <&custom_i2c>;
+// };
+
+// &pinctrl {
+//         custom_i2c_pins: custom_i2c_pins {
+//                 pinmux = <PINMUX_I2C_SCL>, <PINMUX_I2C_SDA>;
+//                 bias-pull-up;
+//                 drive-strength = <3>;
+//         };
+// };
+
+// &arduino_i2c {
+//         pinctrl-names = "default_test2";
+//         // pinctrl-0 = <&custom_i2c_pins>;
+// };    
+
+// &spi3 {
+//         compatible = "adi,max14916-gpio";
+// };
+
+// / {
+//         my_node {
+//                 compatible = "adi,max14916-gpio";
+//         };
+
+//         label_a: node_a { /* Empty. */ };
+//         label_b: node_b { /* Empty. */ };
+//         node_refs {
+//                 phandles = <&{/node_a} &label_b>;
+//         };
+// };
+
+/* Enable SPI1 peripheral */
+&spi1 {
+        status = "okay";
+        cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>; /* PA4 as chip select for MAX14916 */
+
+        max14916: max14916@0 {
+                compatible = "adi,max14916-gpio";
+                reg = <0>; /* SPI address */
+                spi-max-frequency = <1000000>; /* SPI clock frequency in Hz */
+                status = "okay";
+
+                // cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>;
+                // pinctrl-names = "default";
+                // pinctrl-0 = < &spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7 >;
+
+                #gpio-cells = <2>;
+                ngpios = <8>;
+
+                /* GPIO Pins */
+                drdy-gpios = <&gpioa 0 GPIO_ACTIVE_LOW>; /* PA0 - DRDY */
+                fault-gpios = <&gpiob 0 GPIO_ACTIVE_LOW>; /* PB0 - Fault */
+                sync-gpios = <&gpioa 1 GPIO_ACTIVE_LOW>; /* PA1 - Sync */
+                en-gpios = <&gpioa 2 GPIO_ACTIVE_HIGH>; /* PA2 - Enable */
+
+                /* Device-specific configurations */
+                // crc-en = ok; /* Enable CRC */
+                spi-addr = <0x0>; /* SPI device address */
+                gpio-controller;
+
+                // ow-on-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-on settings */
+                // ow-off-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-off settings */
+                // sh-vdd-en = [0 0 0 0]; /* Short-to-VDD detection */
+                // sled-set = <1>; /* Enable status LEDs */
+                // fled-stretch = <1>; /* Set fault LED (FLED) minimum on-time */
+        };
+};
+
+// &spi3{
+//         status = "okay";
+//         cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>; /* PA4 as chip select for MAX14916 */
+
+//         max14916: max14916@1 {
+//                 compatible = "adi,max14916-gpio";
+//                 reg = <0>; /* SPI address */
+//                 spi-max-frequency = <1000000>; /* SPI clock frequency in Hz */
+//                 status = "okay";
+
+//                 // cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>;
+//                 // pinctrl-names = "default";
+//                 // pinctrl-0 = < &spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7 >;
+
+//                 #gpio-cells = <2>;
+//                 ngpios = <8>;
+
+//                 /* GPIO Pins */
+//                 drdy-gpios = <&gpioa 0 GPIO_ACTIVE_LOW>; /* PA0 - DRDY */
+//                 fault-gpios = <&gpiob 0 GPIO_ACTIVE_LOW>; /* PB0 - Fault */
+//                 sync-gpios = <&gpioa 1 GPIO_ACTIVE_LOW>; /* PA1 - Sync */
+//                 en-gpios = <&gpioa 2 GPIO_ACTIVE_HIGH>; /* PA2 - Enable */
+
+//                 /* Device-specific configurations */
+//                 // crc-en = ok; /* Enable CRC */
+//                 spi-addr = <0x0>; /* SPI device address */
+//                 gpio-controller;
+
+//                 // ow-on-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-on settings */
+//                 // ow-off-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-off settings */
+//                 // sh-vdd-en = [0 0 0 0]; /* Short-to-VDD detection */
+//                 // sled-set = <1>; /* Enable status LEDs */
+//                 // fled-stretch = <1>; /* Set fault LED (FLED) minimum on-time */
+//         };
+// };
+

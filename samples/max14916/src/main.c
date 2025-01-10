@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2012-2014 Wind River Systems, Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <stdio.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/sensor.h>
+
+#include <zephyr/drivers/gpio.h>                                                                                                                                                     
+#include <zephyr/drivers/spi.h>
+// #include <zephyr/drivers/gpio/gpio_max14916.h>
+
+#define SPIOP           SPI_WORD_SET(8) | SPI_TRANSFER_MSB
+
+// Blue led
+#define LED0_NODE       DT_ALIAS(led1)
+
+static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
+
+int main(void)
+{
+	printf("Hello World! Starting custom app %s\n", CONFIG_BOARD_TARGET);
+
+	const struct device *const dev = DEVICE_DT_GET_ONE(adi_max14916_gpio);
+
+	if (!device_is_ready(dev)) {
+		printk("Sensor: Device not ready.\n");
+		return 0;
+	}
+        else
+                printk("Sensor: Sensor ready.\n");
+
+        if (!device_is_ready(led.port))
+                printk("Led: Blue led not ready\n");
+        else
+                printk("Led: Blue led is ready\n");
+
+        int ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
+        if (ret < 0)
+                printk("Led: Error on blue led configuration");
+        
+        while (1){
+                ret = gpio_pin_toggle_dt(&led);
+                if(ret < 0)
+                        printk("Led: Blue led error\n");
+                k_msleep(1000);
+        }
+
+        struct spi_dt_spec spispec = SPI_DT_SPEC_GET(DT_NODELABEL(max14916), SPIOP, 0);
+
+        struct spi_config sc = spispec.config;
+
+        printk("Slave addrs: %d\n", sc.slave);
+        printk("SPI frequency: %d\n", sc.frequency);
+        printk("SPI operating mode: %d\n", sc.operation);
+
+	return 0;
+}
