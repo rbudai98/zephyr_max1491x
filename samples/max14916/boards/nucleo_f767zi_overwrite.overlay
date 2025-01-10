@@ -39,38 +39,47 @@
 /* Enable SPI1 peripheral */
 &spi1 {
         status = "okay";
-        cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>; /* PA4 as chip select for MAX14916 */
+        // pinctrl-names = "default";
+        // pinctrl-0 = < &spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7 >;
+        // cs-gpios = <&gpiod 10 GPIO_ACTIVE_LOW>; /* PA4 as chip select for MAX14916 */
 
-        max14916: max14916@0 {
-                compatible = "adi,max14916-gpio";
-                reg = <0>; /* SPI address */
-                spi-max-frequency = <1000000>; /* SPI clock frequency in Hz */
-                status = "okay";
-
-                // cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>;
-                // pinctrl-names = "default";
-                // pinctrl-0 = < &spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7 >;
-
-                #gpio-cells = <2>;
-                ngpios = <8>;
-
-                /* GPIO Pins */
-                drdy-gpios = <&gpioa 0 GPIO_ACTIVE_LOW>; /* PA0 - DRDY */
-                fault-gpios = <&gpiob 0 GPIO_ACTIVE_LOW>; /* PB0 - Fault */
-                sync-gpios = <&gpioa 1 GPIO_ACTIVE_LOW>; /* PA1 - Sync */
-                en-gpios = <&gpioa 2 GPIO_ACTIVE_HIGH>; /* PA2 - Enable */
-
-                /* Device-specific configurations */
-                // crc-en = ok; /* Enable CRC */
-                spi-addr = <0x0>; /* SPI device address */
-                gpio-controller;
-
-                // ow-on-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-on settings */
-                // ow-off-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-off settings */
-                // sh-vdd-en = [0 0 0 0]; /* Short-to-VDD detection */
-                // sled-set = <1>; /* Enable status LEDs */
-                // fled-stretch = <1>; /* Set fault LED (FLED) minimum on-time */
+        test_spi_node: test_spi_node@0 {
+                compatible = "vnd,spi-device";
+                reg = <0>;
+                spi-max-frequency = <600000>;
+                label = "test_spi_node";
         };
+
+        // max14916: max14916@0 {
+        //         compatible = "adi,max14916-gpio";
+        //         reg = <0>; /* SPI address */
+        //         spi-max-frequency = <1000000>; /* SPI clock frequency in Hz */
+        //         status = "okay";
+
+        //         // cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>;
+        //         // pinctrl-names = "default";
+        //         // pinctrl-0 = < &spi1_sck_pa5 &spi1_miso_pa6 &spi1_mosi_pa7 >;
+
+        //         #gpio-cells = <2>;
+        //         ngpios = <8>;
+
+        //         /* GPIO Pins */
+        //         drdy-gpios = <&gpioa 0 GPIO_ACTIVE_LOW>; /* PA0 - DRDY */
+        //         fault-gpios = <&gpiob 0 GPIO_ACTIVE_LOW>; /* PB0 - Fault */
+        //         sync-gpios = <&gpioa 1 GPIO_ACTIVE_LOW>; /* PA1 - Sync */
+        //         en-gpios = <&gpioa 2 GPIO_ACTIVE_HIGH>; /* PA2 - Enable */
+
+        //         /* Device-specific configurations */
+        //         // crc-en = ok; /* Enable CRC */
+        //         spi-addr = <0x0>; /* SPI device address */
+        //         gpio-controller;
+
+        //         // ow-on-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-on settings */
+        //         // ow-off-en = [0 0 0 0 0 0 0 0]; /* Default open-wire-off settings */
+        //         // sh-vdd-en = [0 0 0 0]; /* Short-to-VDD detection */
+        //         // sled-set = <1>; /* Enable status LEDs */
+        //         // fled-stretch = <1>; /* Set fault LED (FLED) minimum on-time */
+        // };
 };
 
 // &spi3{
